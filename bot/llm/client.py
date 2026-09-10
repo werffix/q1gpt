@@ -68,11 +68,15 @@ class LLMClient:
                 await asyncio.sleep(0.8 * (attempt + 1))
 
     async def _error_text(self, response: httpx.Response) -> str:
+        """Return an API error after consuming a possibly streamed response body."""
+        body = await response.aread()
         try:
-            detail = response.json().get("error", {}).get("message")
+            payload = json.loads(body)
+            error = payload.get("error", payload)
+            detail = error.get("message") if isinstance(error, dict) else None
             if detail:
                 return str(detail)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, UnicodeDecodeError):
             pass
         return f"HTTP {response.status_code}"
 
