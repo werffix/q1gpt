@@ -20,6 +20,7 @@ class LLMClient:
     def __init__(self) -> None:
         settings = get_settings()
         self.base_url = settings.llm_base_url.rstrip("/")
+        self.responses_url = self.base_url if self.base_url.endswith("/responses") else f"{self.base_url}/responses"
         self.api_key = settings.llm_api_key
         self.timeout = settings.llm_timeout
 
@@ -38,7 +39,7 @@ class LLMClient:
             try:
                 async with httpx.AsyncClient(timeout=self.timeout) as client:
                     if stream:
-                        async with client.stream("POST", f"{self.base_url}/responses", headers=self._headers(), json=payload) as response:
+                        async with client.stream("POST", self.responses_url, headers=self._headers(), json=payload) as response:
                             if response.is_error:
                                 raise LLMError(await self._error_text(response))
                             async for line in response.aiter_lines():
@@ -55,7 +56,7 @@ class LLMClient:
                                 if text:
                                     yield str(text)
                     else:
-                        response = await client.post(f"{self.base_url}/responses", headers=self._headers(), json=payload)
+                        response = await client.post(self.responses_url, headers=self._headers(), json=payload)
                         if response.is_error:
                             raise LLMError(await self._error_text(response))
                         data = response.json()

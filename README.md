@@ -16,14 +16,14 @@ Telegram-бот на aiogram 3.x для общения с моделями че�
 ```dotenv
 BOT_TOKEN=123456789:AAExampleBotToken
 LLM_API_KEY=your-vibecode-api-key
-LLM_BASE_URL=https://vibecode.moe/v1/codex
+LLM_BASE_URL=https://vibecode.moe/v1/responses
 DATABASE_URL=sqlite+aiosqlite:///./bot.db
 ADMIN_IDS=123456789,987654321
 MAX_CONTEXT_MESSAGES=20
 LLM_TIMEOUT=120
 ```
 
-`ADMIN_IDS` содержит числовые Telegram ID через запятую. Администраторы проходят проверку доступа автоматически. Через админ-панель можно выдавать и отзывать доступ, добавлять и включать модели, менять их API ID и просматривать статистику.
+`LLM_BASE_URL` можно указать как полный endpoint `https://vibecode.moe/v1/responses` или как базовый URL, к которому клиент добавит `/responses`. `ADMIN_IDS` содержит числовые Telegram ID через запятую. Администраторы проходят проверку доступа автоматически. Через админ-панель можно выдавать и отзывать доступ, добавлять и включать модели, менять их API ID и просматривать статистику.
 
 ## Автозапуск
 
